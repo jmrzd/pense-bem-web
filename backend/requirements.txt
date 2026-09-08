@@ -1,0 +1,11 @@
+# Dependências do backend serão adicionadas após
+# a definição do framework Python utilizado pela equipe.
+
+# Exemplos de categorias que serão necessárias:
+# - Framework para API
+# - Cliente/integração com Supabase
+# - Gerenciamento de variáveis de ambiente
+# - Servidor da aplicação
+#
+# IMPORTANTE:
+# Adicionar somente as dependências realmente utilizadas pelo backend.
