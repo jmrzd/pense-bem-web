@@ -509,25 +509,4 @@ Aprendendo programação, banco de dados e desenvolvimento web através de um pr
 
 React • TypeScript • Python • Supabase • PostgreSQL • SQL
 
-🏆 Que vença o melhor jogador.
-
-</div> ```
-Uma mudança que fiz de propósito
-
-Eu não coloquei ainda Flask nem FastAPI como tecnologia confirmada, porque vocês ainda não decidiram qual framework Python vai fazer a API. Melhor um README profissional que diga apenas o que já foi decidido do que colocar tecnologia só pra depois mudar.
-
-Também deixei dashboard/ como estrutura planejada. Quando o JP começar o React e o Ibson começar o dashboard, podemos decidir se o dashboard vai ser uma área dentro do próprio frontend/src — que provavelmente será mais organizado — em vez de uma aplicação completamente separada.
-
-Esse README já apresenta o projeto como sistema, não como “trabalho com 30 perguntas”. Quem entrar no GitHub vai entender problema, funcionamento, arquitetura, dados, equipe e responsabilidades antes mesmo de abrir o código.
-
-
-
-
-
-
-
-
-
-
-
 
