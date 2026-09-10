@@ -225,3 +225,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .eslintcache
+
+# A regra "lib/" da seção Python acima também bate com frontend/src/lib/
+# (utilitários do frontend, sem relação com build de pacote Python). Sem isto,
+# esses arquivos ficam silenciosamente fora do repositório.
+!frontend/src/lib/
+!frontend/src/lib/**
