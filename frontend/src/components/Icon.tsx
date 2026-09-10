@@ -21,6 +21,12 @@ export type IconName =
   | 'globe'
   | 'dna'
   | 'alert'
+  | 'volumeOn'
+  | 'volumeOff'
+  | 'sun'
+  | 'moon'
+  | 'musicNote'
+  | 'chevronDown'
 
 const PATHS: Record<IconName, ReactElement> = {
   gamepad: (
@@ -119,6 +125,33 @@ const PATHS: Record<IconName, ReactElement> = {
       <path d="M12 10v4M12 17h.01" />
     </>
   ),
+  volumeOn: (
+    <>
+      <path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z" />
+      <path d="M16 9c1 .9 1.6 2 1.6 3s-.6 2.1-1.6 3M18.3 6.7c1.8 1.6 2.8 3.5 2.8 5.3s-1 3.7-2.8 5.3" />
+    </>
+  ),
+  volumeOff: (
+    <>
+      <path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z" />
+      <path d="M16 9.5l5 5M21 9.5l-5 5" />
+    </>
+  ),
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.5v3M12 18.5v3M4.4 4.4l2.1 2.1M17.5 17.5l2.1 2.1M2.5 12h3M18.5 12h3M4.4 19.6l2.1-2.1M17.5 6.5l2.1-2.1" />
+    </>
+  ),
+  moon: <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" />,
+  musicNote: (
+    <>
+      <circle cx="7" cy="17" r="2.6" />
+      <circle cx="17" cy="15" r="2.6" />
+      <path d="M9.6 17V5.5L19.6 3v12" />
+    </>
+  ),
+  chevronDown: <path d="M5.5 8.5 12 15l6.5-6.5" />,
 }
 
 interface IconProps extends SVGProps<SVGSVGElement> {
