@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState, type FormEvent } from 'react'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState, type FormEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
@@ -74,6 +74,38 @@ function FloatingIcon({
   )
 }
 
+function TiltCard({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 18 })
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 150, damping: 18 })
+
+  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const bounds = ref.current?.getBoundingClientRect()
+    if (!bounds) return
+    x.set((event.clientX - bounds.left) / bounds.width - 0.5)
+    y.set((event.clientY - bounds.top) / bounds.height - 0.5)
+  }
+
+  function handlePointerLeave() {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      style={{ rotateX, rotateY, transformPerspective: 1200 }}
+      className="will-change-transform"
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export function Home() {
   const { setNickname } = usePlayer()
   const navigate = useNavigate()
@@ -107,6 +139,7 @@ export function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 90, damping: 16 }}
       >
+        <TiltCard>
         <Panel className="relative overflow-hidden !p-0">
           <div className="relative overflow-hidden border-b-[3px] border-ink bg-mustard px-6 py-10 text-center sm:px-14 sm:py-14">
             <FloatingIcon
@@ -216,6 +249,7 @@ export function Home() {
             </form>
           </div>
         </Panel>
+        </TiltCard>
       </motion.div>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
