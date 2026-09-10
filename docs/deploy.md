@@ -399,6 +399,31 @@ Hospedagem
 
 Os comandos definitivos serão documentados quando a estrutura React estiver criada.
 
+**Atualização:** a estrutura React já existe em `frontend/`. Os comandos reais são:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+O build gera os arquivos estáticos em `frontend/dist/`, prontos para qualquer hospedagem de site estático.
+
+---
+
+# ▲ Publicando o Frontend na Vercel
+
+Passo a passo real (a plataforma escolhida foi a Vercel):
+
+1. Acesse [vercel.com](https://vercel.com) e faça login com a conta do GitHub que tem acesso a este repositório.
+2. Clique em **Add New → Project** e importe o repositório `pense-bem-web`.
+3. Em **Root Directory**, selecione `frontend` (o projeto React está dentro dessa subpasta, não na raiz do repositório).
+4. A Vercel detecta automaticamente que é um projeto Vite — os campos **Build Command** (`npm run build`) e **Output Directory** (`dist`) já vêm preenchidos corretamente. Já existe também um `frontend/vercel.json` com a regra de rewrite para SPA (evita erro 404 ao recarregar rotas como `/ranking` ou `/dashboard`).
+5. (Opcional) Em **Environment Variables**, adicione `VITE_ADMIN_CODE` com o código de acesso à área administrativa (`/dashboard`) — veja `frontend/.env.example`. Se não configurar, é usado um código padrão de desenvolvimento.
+6. Clique em **Deploy**. A partir daí, todo push na branch `main` gera um novo deploy automático.
+
+Depois do primeiro deploy, a Vercel gera uma URL pública (algo como `https://pense-bem-web.vercel.app`) — atualize a seção "🔗 URLs da aplicação" acima com o endereço real.
+
 ---
 
 # 🐍 Inicialização do Backend

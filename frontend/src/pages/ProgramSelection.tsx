@@ -4,12 +4,13 @@ import { Icon, type IconName } from '../components/Icon'
 import { Panel } from '../components/Panel'
 import { usePlayer } from '../context/PlayerContext'
 import { listPrograms } from '../services/programService'
+import { getSession } from '../services/quizSessionService'
 import type { Program } from '../types'
 
 const ACCENT_CLASSES: Record<Program['accent'], string> = {
-  mustard: 'bg-mustard',
-  coral: 'bg-coral text-paper',
-  teal: 'bg-teal text-paper',
+  mustard: 'bg-mustard text-chip-dark',
+  coral: 'bg-coral text-chip-light',
+  teal: 'bg-teal text-chip-light',
 }
 
 const PROGRAM_ICONS: Record<string, IconName> = {
@@ -34,39 +35,50 @@ export function ProgramSelection() {
       </motion.div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {programs.map((program, index) => (
-          <motion.button
-            key={program.id}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
-            onClick={() => navigate(`/quiz/${program.id}`)}
-            className="press text-left"
-          >
-            <Panel className="relative h-full">
-              <span className="panel-sm absolute -right-3 -top-3 flex h-11 w-11 rotate-6 items-center justify-center rounded-full bg-paper font-hero text-sm">
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <div
-                className={`flex h-14 w-14 items-center justify-center rounded-xl border-[2.5px] border-ink ${ACCENT_CLASSES[program.accent]}`}
-              >
-                <Icon name={PROGRAM_ICONS[program.id] ?? 'star'} size={28} strokeWidth={2} />
-              </div>
-              <h2 className="mt-4 font-display text-xl font-bold">{program.name}</h2>
-              <p className="mt-1 text-sm font-bold text-ink-soft">{program.tagline}</p>
-              <p className="mt-3 text-sm text-ink-soft">{program.description}</p>
-              <div className="mt-5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-ink-soft">
-                <span>30 perguntas</span>
-                <span>até 90 pts</span>
-              </div>
-              <div
-                className={`panel-sm mt-4 inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold ${ACCENT_CLASSES[program.accent]}`}
-              >
-                Jogar agora →
-              </div>
-            </Panel>
-          </motion.button>
-        ))}
+        {programs.map((program, index) => {
+          const session = player ? getSession(program.id, player.id) : null
+          const inProgress = session !== null && session.currentIndex + session.answers.length > 0
+
+          return (
+            <motion.button
+              key={program.id}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
+              onClick={() => navigate(`/quiz/${program.id}`)}
+              className="press text-left"
+            >
+              <Panel className="relative h-full">
+                <span className="panel-sm absolute -right-3 -top-3 flex h-11 w-11 rotate-6 items-center justify-center rounded-full bg-paper font-hero text-sm">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-xl border-[2.5px] border-ink ${ACCENT_CLASSES[program.accent]}`}
+                >
+                  <Icon name={PROGRAM_ICONS[program.id] ?? 'star'} size={28} strokeWidth={2} />
+                </div>
+                <h2 className="mt-4 font-display text-xl font-bold">{program.name}</h2>
+                <p className="mt-1 text-sm font-bold text-ink-soft">{program.tagline}</p>
+                <p className="mt-3 text-sm text-ink-soft">{program.description}</p>
+                <div className="mt-5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-ink-soft">
+                  <span>30 perguntas</span>
+                  <span>até 90 pts</span>
+                </div>
+                {inProgress ? (
+                  <div className="panel-sm mt-4 inline-flex items-center gap-1.5 rounded-lg bg-cobalt px-4 py-2 text-sm font-bold text-chip-light">
+                    <Icon name="rocket" size={16} /> Continuar (pergunta {session!.currentIndex + 1}/30)
+                  </div>
+                ) : (
+                  <div
+                    className={`panel-sm mt-4 inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold ${ACCENT_CLASSES[program.accent]}`}
+                  >
+                    Jogar agora →
+                  </div>
+                )}
+              </Panel>
+            </motion.button>
+          )
+        })}
       </div>
     </div>
   )

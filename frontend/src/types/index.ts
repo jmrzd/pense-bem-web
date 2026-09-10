@@ -55,6 +55,21 @@ export interface Match {
   finishedAt: string
 }
 
+export type QuestionFeedback = 'idle' | 'correct' | 'incorrect' | 'revealed'
+
+export interface QuizSession {
+  programId: string
+  playerId: string
+  playerNickname: string
+  startedAt: string
+  currentIndex: number
+  attempts: AttemptRecord[]
+  triedOptionIds: string[]
+  feedback: QuestionFeedback
+  score: number
+  answers: AnsweredQuestion[]
+}
+
 export interface RankingEntry {
   playerId: string
   nickname: string

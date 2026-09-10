@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createId } from '../lib/id'
 import { saveMatch } from '../services/matchService'
-import type { AnsweredQuestion, AttemptRecord, Match, Program } from '../types'
+import { clearSession, getSession, saveSession } from '../services/quizSessionService'
+import type { AnsweredQuestion, AttemptRecord, Match, Program, QuestionFeedback, QuizSession } from '../types'
 
-export type QuestionFeedback = 'idle' | 'correct' | 'incorrect' | 'revealed'
+export type { QuestionFeedback }
 
 const POINTS_BY_ATTEMPT: Record<1 | 2 | 3, number> = { 1: 3, 2: 2, 3: 1 }
 
@@ -15,19 +16,38 @@ interface UseQuizOptions {
 }
 
 export function useQuiz({ program, playerId, playerNickname, onFinish }: UseQuizOptions) {
-  const [startedAt] = useState(() => new Date().toISOString())
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [attempts, setAttempts] = useState<AttemptRecord[]>([])
-  const [triedOptionIds, setTriedOptionIds] = useState<string[]>([])
-  const [feedback, setFeedback] = useState<QuestionFeedback>('idle')
-  const [score, setScore] = useState(0)
-  const [answers, setAnswers] = useState<AnsweredQuestion[]>([])
+  const [resumedSession] = useState(() => getSession(program.id, playerId))
+  const wasResumed = resumedSession !== null && resumedSession.currentIndex + resumedSession.answers.length > 0
+
+  const [startedAt] = useState(() => resumedSession?.startedAt ?? new Date().toISOString())
+  const [currentIndex, setCurrentIndex] = useState(() => resumedSession?.currentIndex ?? 0)
+  const [attempts, setAttempts] = useState<AttemptRecord[]>(() => resumedSession?.attempts ?? [])
+  const [triedOptionIds, setTriedOptionIds] = useState<string[]>(() => resumedSession?.triedOptionIds ?? [])
+  const [feedback, setFeedback] = useState<QuestionFeedback>(() => resumedSession?.feedback ?? 'idle')
+  const [score, setScore] = useState(() => resumedSession?.score ?? 0)
+  const [answers, setAnswers] = useState<AnsweredQuestion[]>(() => resumedSession?.answers ?? [])
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null)
 
   const totalQuestions = program.questions.length
   const currentQuestion = program.questions[currentIndex]
   const attemptNumber = (attempts.length + 1) as 1 | 2 | 3
   const isLastQuestion = currentIndex === totalQuestions - 1
+
+  useEffect(() => {
+    const session: QuizSession = {
+      programId: program.id,
+      playerId,
+      playerNickname,
+      startedAt,
+      currentIndex,
+      attempts,
+      triedOptionIds,
+      feedback,
+      score,
+      answers,
+    }
+    saveSession(session)
+  }, [answers, attempts, currentIndex, feedback, playerId, playerNickname, program.id, score, startedAt, triedOptionIds])
 
   const confirmAnswer = useCallback(() => {
     if (!selectedOptionId || feedback === 'correct' || feedback === 'revealed') return
@@ -95,6 +115,7 @@ export function useQuiz({ program, playerId, playerNickname, onFinish }: UseQuiz
         finishedAt,
       }
       saveMatch(match)
+      clearSession()
       onFinish(match)
       return
     }
@@ -123,5 +144,6 @@ export function useQuiz({ program, playerId, playerNickname, onFinish }: UseQuiz
     goToNextQuestion,
     isLastQuestion,
     progressPercent,
+    wasResumed,
   }
 }

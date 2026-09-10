@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { lazy, Suspense, type ReactNode } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
+import { AdminGate } from './components/AdminGate'
 import { BackgroundFX } from './components/BackgroundFX'
 import { Loading } from './components/Loading'
 import { Marquee } from './components/Marquee'
 import { Navbar } from './components/Navbar'
 import { RequirePlayer } from './components/RequirePlayer'
+import { SplashScreen } from './components/SplashScreen'
 import { Home } from './pages/Home'
 
 const ProgramSelection = lazy(() => import('./pages/ProgramSelection').then((m) => ({ default: m.ProgramSelection })))
@@ -32,6 +34,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen">
+      <SplashScreen />
       <BackgroundFX />
       <Navbar />
       <Marquee />
@@ -72,7 +75,16 @@ export default function App() {
                 }
               />
               <Route path="/ranking" element={<AnimatedPage><Ranking /></AnimatedPage>} />
-              <Route path="/dashboard" element={<AnimatedPage><Dashboard /></AnimatedPage>} />
+              <Route
+                path="/dashboard"
+                element={
+                  <AdminGate>
+                    <AnimatedPage>
+                      <Dashboard />
+                    </AnimatedPage>
+                  </AdminGate>
+                }
+              />
             </Routes>
           </AnimatePresence>
         </Suspense>

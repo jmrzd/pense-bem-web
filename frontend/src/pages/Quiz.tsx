@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AttemptsDots } from '../components/AttemptsDots'
 import { Button } from '../components/Button'
@@ -56,6 +56,7 @@ function QuizRunner({
 }) {
   const program = getProgram(programId)!
   const quiz = useQuiz({ program, playerId, playerNickname, onFinish })
+  const [showResumeBanner, setShowResumeBanner] = useState(quiz.wasResumed)
 
   useEffect(() => {
     if (quiz.feedback === 'correct') fireSmallBurst()
@@ -87,11 +88,32 @@ function QuizRunner({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
+      {showResumeBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="panel-sm mb-6 flex items-center justify-between gap-3 rounded-lg bg-cobalt px-4 py-2.5 text-chip-light"
+        >
+          <span className="flex items-center gap-2 text-sm font-bold">
+            <Icon name="rocket" size={16} className="flex-none" />
+            Continuando de onde você parou — pergunta {quiz.currentIndex + 1} de {quiz.totalQuestions}.
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowResumeBanner(false)}
+            aria-label="Fechar aviso"
+            className="flex-none rounded-md border-2 border-chip-light/60 p-1 hover:bg-chip-light/10"
+          >
+            <Icon name="x" size={14} />
+          </button>
+        </motion.div>
+      )}
+
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="tag bg-paper">{program.name}</div>
         <div className="flex items-center gap-4">
           <AttemptsDots attemptNumber={quiz.attemptNumber} />
-          <div className="panel-sm rounded-lg bg-mustard px-4 py-2 font-display text-lg font-extrabold">
+          <div className="panel-sm rounded-lg bg-mustard px-4 py-2 font-display text-lg font-extrabold text-chip-dark">
             {quiz.score} pts
           </div>
         </div>
@@ -166,13 +188,13 @@ function FeedbackBanner({
   if (feedback === 'idle') return null
 
   const messages: Record<string, { text: string; icon: 'check' | 'x' | 'bulb'; className: string }> = {
-    correct: { text: 'Resposta correta! Pontos garantidos.', icon: 'check', className: 'bg-teal text-paper' },
+    correct: { text: 'Resposta correta! Pontos garantidos.', icon: 'check', className: 'bg-teal text-chip-light' },
     incorrect: {
       text: `Resposta incorreta. Você ainda tem ${attemptsRemaining} tentativa${attemptsRemaining > 1 ? 's' : ''}.`,
       icon: 'x',
-      className: 'bg-coral text-paper',
+      className: 'bg-coral text-chip-light',
     },
-    revealed: { text: 'Suas tentativas acabaram. A resposta certa está em destaque.', icon: 'bulb', className: 'bg-mustard text-ink' },
+    revealed: { text: 'Suas tentativas acabaram. A resposta certa está em destaque.', icon: 'bulb', className: 'bg-mustard text-chip-dark' },
   }
 
   const message = messages[feedback]
