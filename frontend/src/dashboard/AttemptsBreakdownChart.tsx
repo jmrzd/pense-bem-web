@@ -1,9 +1,17 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { useTheme } from '../hooks/useTheme'
 import type { DashboardStats } from '../types'
 
 const COLORS = ['#1c8c74', '#3a5dae', '#ffc738', '#ff5a3c']
+const THEME_HEX = {
+  light: { ink: '#17130f', paper: '#fffbf2' },
+  dark: { ink: '#f3ede0', paper: '#241f18' },
+}
 
 export function AttemptsBreakdownChart({ stats }: { stats: DashboardStats }) {
+  const { resolved } = useTheme()
+  const { ink, paper } = THEME_HEX[resolved]
+
   const data = [
     { name: '1ª tentativa', value: stats.firstAttemptHits },
     { name: '2ª tentativa', value: stats.secondAttemptHits },
@@ -20,17 +28,17 @@ export function AttemptsBreakdownChart({ stats }: { stats: DashboardStats }) {
     <div className="flex flex-col items-center gap-4 sm:flex-row">
       <ResponsiveContainer width="100%" height={220} className="max-w-[220px]">
         <PieChart>
-          <Pie data={data} dataKey="value" nameKey="name" innerRadius={55} outerRadius={85} paddingAngle={3} stroke="#17130f" strokeWidth={2}>
+          <Pie data={data} dataKey="value" nameKey="name" innerRadius={55} outerRadius={85} paddingAngle={3} stroke={ink} strokeWidth={2}>
             {data.map((_, index) => (
               <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip
             contentStyle={{
-              background: '#fffbf2',
-              border: '2.5px solid #17130f',
+              background: paper,
+              border: `2.5px solid ${ink}`,
               borderRadius: 10,
-              color: '#17130f',
+              color: ink,
               fontWeight: 600,
             }}
           />

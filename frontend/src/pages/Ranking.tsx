@@ -17,7 +17,7 @@ export function Ranking() {
       </motion.div>
 
       {ranking.length === 0 ? (
-        <Panel className="mx-auto max-w-md bg-mustard text-center">
+        <Panel className="mx-auto max-w-md bg-mustard text-center text-chip-dark">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border-2 border-ink bg-paper">
             <Icon name="gamepad" size={26} />
           </div>

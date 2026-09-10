@@ -51,7 +51,7 @@ export function Result() {
     <div className="mx-auto max-w-2xl px-4 py-10 text-center">
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring' }}>
         <p className="text-sm font-bold uppercase tracking-widest text-ink-soft">Partida finalizada</p>
-        <div className="panel-sm mx-auto mb-3 mt-3 flex h-14 w-14 items-center justify-center rounded-xl bg-mustard">
+        <div className="panel-sm mx-auto mb-3 mt-3 flex h-14 w-14 items-center justify-center rounded-xl bg-mustard text-chip-dark">
           <Icon name={rank.icon} size={26} />
         </div>
         <h1 className="font-hero text-3xl sm:text-4xl">{rank.label.toUpperCase()}</h1>
@@ -60,11 +60,11 @@ export function Result() {
         </p>
       </motion.div>
 
-      <Panel className="ticket mt-8 bg-mustard">
-        <p className="text-xs font-bold uppercase tracking-widest text-ink/70">Pontuação final</p>
+      <Panel className="ticket mt-8 bg-mustard text-chip-dark">
+        <p className="text-xs font-bold uppercase tracking-widest text-chip-dark/70">Pontuação final</p>
         <p className="mt-1 font-hero text-6xl">
           <AnimatedNumber value={match.score} durationMs={1200} />
-          <span className="text-3xl text-ink/50"> / {MAX_SCORE}</span>
+          <span className="text-3xl text-chip-dark/50"> / {MAX_SCORE}</span>
         </p>
 
         <div className="mt-3 h-4 w-full overflow-hidden rounded-lg border-[2.5px] border-ink bg-paper">
@@ -76,7 +76,7 @@ export function Result() {
           />
         </div>
 
-        <p className="mt-4 text-sm font-semibold text-ink/80">
+        <p className="mt-4 text-sm font-semibold text-chip-dark/80">
           {match.correctCount} de {match.answers.length} perguntas corretas
         </p>
 
@@ -84,10 +84,10 @@ export function Result() {
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: '1ª tentativa', value: firstAttempt, bg: 'bg-paper' },
-            { label: '2ª tentativa', value: secondAttempt, bg: 'bg-paper' },
-            { label: '3ª tentativa', value: thirdAttempt, bg: 'bg-paper' },
-            { label: 'Erradas', value: missed, bg: 'bg-coral text-paper' },
+            { label: '1ª tentativa', value: firstAttempt, bg: 'bg-paper text-ink' },
+            { label: '2ª tentativa', value: secondAttempt, bg: 'bg-paper text-ink' },
+            { label: '3ª tentativa', value: thirdAttempt, bg: 'bg-paper text-ink' },
+            { label: 'Erradas', value: missed, bg: 'bg-coral text-chip-light' },
           ].map((stat) => (
             <div key={stat.label} className={`panel-sm rounded-lg p-3 ${stat.bg}`}>
               <p className="font-display text-2xl font-extrabold">{stat.value}</p>

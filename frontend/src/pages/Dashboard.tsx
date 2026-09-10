@@ -18,12 +18,12 @@ export function Dashboard() {
       </motion.div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        <StatTile icon="users" label="Jogadores" value={stats.totalPlayers} delay={0} accent="bg-cobalt" />
-        <StatTile icon="gamepad" label="Partidas" value={stats.totalMatches} delay={0.05} accent="bg-coral" />
-        <StatTile icon="chart" label="Média" value={stats.averageScore} delay={0.1} accent="bg-teal" />
-        <StatTile icon="target" label="Acertos" value={stats.accuracyRate} suffix="%" delay={0.15} accent="bg-mustard" />
-        <StatTile icon="crown" label="Melhor score" value={stats.bestScore} delay={0.2} accent="bg-coral" />
-        <StatTile icon="flame" label="Partidas do +ativo" value={stats.mostActivePlayerMatches} delay={0.25} accent="bg-teal" />
+        <StatTile icon="users" label="Jogadores" value={stats.totalPlayers} delay={0} accent="bg-cobalt text-chip-light" />
+        <StatTile icon="gamepad" label="Partidas" value={stats.totalMatches} delay={0.05} accent="bg-coral text-chip-light" />
+        <StatTile icon="chart" label="Média" value={stats.averageScore} delay={0.1} accent="bg-teal text-chip-light" />
+        <StatTile icon="target" label="Acertos" value={stats.accuracyRate} suffix="%" delay={0.15} accent="bg-mustard text-chip-dark" />
+        <StatTile icon="crown" label="Melhor score" value={stats.bestScore} delay={0.2} accent="bg-coral text-chip-light" />
+        <StatTile icon="flame" label="Partidas do +ativo" value={stats.mostActivePlayerMatches} delay={0.25} accent="bg-teal text-chip-light" />
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3 text-sm font-semibold text-ink-soft">

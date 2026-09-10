@@ -6,10 +6,10 @@ export type OptionStatus = 'idle' | 'selected' | 'correct' | 'incorrect' | 'reve
 
 const STATUS_CLASSES: Record<OptionStatus, string> = {
   idle: 'bg-paper hover:bg-mustard/25',
-  selected: 'bg-cobalt text-paper',
-  correct: 'bg-teal text-paper',
-  incorrect: 'bg-coral text-paper',
-  'reveal-correct': 'bg-teal text-paper',
+  selected: 'bg-cobalt text-chip-light',
+  correct: 'bg-teal text-chip-light',
+  incorrect: 'bg-coral text-chip-light',
+  'reveal-correct': 'bg-teal text-chip-light',
   disabled: 'bg-paper opacity-50',
 }
 

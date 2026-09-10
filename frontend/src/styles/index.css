@@ -17,6 +17,13 @@
   --color-teal-dark: #146b5c;
   --color-cobalt: #3a5dae;
   --color-cobalt-dark: #2c4b8c;
+
+  /* Não acompanham o tema: texto/ícone fixo para ficar legível sobre um bloco
+     de cor sólida (mostarda/coral/petróleo/cobalto), que continua vivo nos dois
+     temas. Sem isso, "ink" (que vira claro no dark mode) ficaria ilegível em
+     cima da mostarda, por exemplo. */
+  --color-chip-dark: #17130f;
+  --color-chip-light: #fdfaf3;
 }
 
 @layer base {
@@ -24,10 +31,21 @@
     color-scheme: light;
   }
 
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+    }
+  }
+
   body {
     @apply bg-cream text-ink antialiased;
     font-family: var(--font-body);
     min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1,
@@ -40,6 +58,37 @@
   .font-hero {
     font-family: var(--font-hero);
   }
+}
+
+/*
+ * Tema escuro: só os tokens de "superfície" (fundo/texto/borda da página) e as
+ * variantes "-dark" de texto de destaque trocam de valor. Os acentos de marca
+ * (mustard/coral/teal/cobalt) ficam iguais nos dois temas — quem garante a
+ * legibilidade do texto em cima deles são os tokens fixos chip-dark/chip-light
+ * acima, não estes aqui.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-cream: #1b1712;
+    --color-paper: #241f18;
+    --color-ink: #f3ede0;
+    --color-ink-soft: #b8ae9d;
+    --color-mustard-dark: #ffd876;
+    --color-coral-dark: #ff9d85;
+    --color-teal-dark: #6fe0c4;
+    --color-cobalt-dark: #9ab4f0;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-cream: #1b1712;
+  --color-paper: #241f18;
+  --color-ink: #f3ede0;
+  --color-ink-soft: #b8ae9d;
+  --color-mustard-dark: #ffd876;
+  --color-coral-dark: #ff9d85;
+  --color-teal-dark: #6fe0c4;
+  --color-cobalt-dark: #9ab4f0;
 }
 
 @layer utilities {

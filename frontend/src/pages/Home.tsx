@@ -54,7 +54,7 @@ export function Home() {
         >
           PENSE
           <br />
-          <span className="bg-coral px-3 text-paper">BEM</span>
+          <span className="bg-coral px-3 text-chip-light">BEM</span>
         </motion.h1>
       </div>
 
@@ -72,7 +72,7 @@ export function Home() {
         className="mt-6 flex flex-wrap items-center justify-center gap-3"
       >
         {stats.totalMatches === 0 ? (
-          <span className="tag bg-teal text-paper">
+          <span className="tag bg-teal text-chip-light">
             <Icon name="flame" size={13} /> SEJA O PRIMEIRO A ENTRAR NO RANKING
           </span>
         ) : (
@@ -120,9 +120,9 @@ export function Home() {
 
       <div className="mt-14 grid w-full grid-cols-1 gap-5 sm:grid-cols-3">
         {[
-          { icon: 'target' as const, title: '3 tentativas', desc: '3 / 2 / 1 pontos conforme a tentativa certa', bg: 'bg-mustard', rot: '-1.5deg' },
-          { icon: 'trophy' as const, title: 'Ranking real', desc: 'Dados de quem realmente jogou', bg: 'bg-teal text-paper', rot: '1deg' },
-          { icon: 'chart' as const, title: 'Dashboard', desc: 'Estatísticas completas das partidas', bg: 'bg-coral text-paper', rot: '-1deg' },
+          { icon: 'target' as const, title: '3 tentativas', desc: '3 / 2 / 1 pontos conforme a tentativa certa', bg: 'bg-mustard text-chip-dark', rot: '-1.5deg' },
+          { icon: 'trophy' as const, title: 'Ranking real', desc: 'Dados de quem realmente jogou', bg: 'bg-teal text-chip-light', rot: '1deg' },
+          { icon: 'chart' as const, title: 'Dashboard', desc: 'Estatísticas completas das partidas', bg: 'bg-coral text-chip-light', rot: '-1deg' },
         ].map((f, i) => (
           <motion.div
             key={f.title}

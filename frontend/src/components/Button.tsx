@@ -10,11 +10,11 @@ interface ButtonProps extends NativeButtonProps {
 }
 
 const VARIANTS: Record<string, string> = {
-  primary: 'bg-mustard text-ink',
+  primary: 'bg-mustard text-chip-dark',
   secondary: 'bg-paper text-ink',
-  coral: 'bg-coral text-paper',
-  teal: 'bg-teal text-paper',
-  danger: 'bg-coral text-paper',
+  coral: 'bg-coral text-chip-light',
+  teal: 'bg-teal text-chip-light',
+  danger: 'bg-coral text-chip-light',
 }
 
 const SIZES: Record<string, string> = {

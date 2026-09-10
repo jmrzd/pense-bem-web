@@ -27,7 +27,7 @@ export function Podium({ entries }: { entries: RankingEntry[] }) {
             className={clsx('flex flex-1 flex-col items-center gap-3', config.order)}
           >
             <div className="text-3xl sm:text-4xl">{config.medal}</div>
-            <div className="panel-sm flex h-12 w-12 items-center justify-center rounded-full bg-coral font-display text-lg font-bold text-paper sm:h-16 sm:w-16 sm:text-xl">
+            <div className="panel-sm flex h-12 w-12 items-center justify-center rounded-full bg-coral font-display text-lg font-bold text-chip-light sm:h-16 sm:w-16 sm:text-xl">
               {entry.nickname.slice(0, 2).toUpperCase()}
             </div>
             <p className="max-w-[7rem] truncate text-center text-sm font-bold text-ink sm:text-base">{entry.nickname}</p>

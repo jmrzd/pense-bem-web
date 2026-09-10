@@ -12,7 +12,7 @@ interface StatTileProps {
   delay?: number
 }
 
-export function StatTile({ icon, label, value, suffix, accent = 'bg-mustard', delay = 0 }: StatTileProps) {
+export function StatTile({ icon, label, value, suffix, accent = 'bg-mustard text-chip-dark', delay = 0 }: StatTileProps) {
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay, duration: 0.4 }}>
       <Panel className="flex flex-col gap-2">

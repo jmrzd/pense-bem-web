@@ -7,7 +7,7 @@ interface PageHeadingProps {
   accent?: string
 }
 
-export function PageHeading({ icon, title, subtitle, accent = 'bg-mustard' }: PageHeadingProps) {
+export function PageHeading({ icon, title, subtitle, accent = 'bg-mustard text-chip-dark' }: PageHeadingProps) {
   return (
     <div className="text-center">
       <div
