@@ -1,18 +1,19 @@
 export interface Option {
-  id: string
+  id: string // código de exibição (A/B/C/D), igual ao option_code do backend
+  apiOptionId: number // id real da alternativa no backend, usado pra enviar a resposta
   text: string
 }
 
 export interface Question {
-  id: number
+  id: number // id da pergunta no backend
   questionNumber: number
   prompt: string
   options: Option[]
-  correctOptionId: string
 }
 
 export interface Program {
-  id: string
+  id: string // slug/code, usado nas rotas do frontend (ex.: "conhecimentos-gerais")
+  apiProgramId: number // id numérico do backend, usado pra iniciar partidas
   name: string
   tagline: string
   description: string
@@ -58,6 +59,7 @@ export interface Match {
 export type QuestionFeedback = 'idle' | 'correct' | 'incorrect' | 'revealed'
 
 export interface QuizSession {
+  apiMatchId: number
   programId: string
   playerId: string
   playerNickname: string
@@ -66,6 +68,7 @@ export interface QuizSession {
   attempts: AttemptRecord[]
   triedOptionIds: string[]
   feedback: QuestionFeedback
+  revealedCorrectOptionId: string | null
   score: number
   answers: AnsweredQuestion[]
 }
