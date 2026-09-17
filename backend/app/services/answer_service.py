@@ -9,7 +9,9 @@ def submit_answer(conn: Connection, match_id: int, question_id: int, option_id: 
 
     - até 3 tentativas por pergunta;
     - pontos por tentativa certa: 3 (1a), 2 (2a), 1 (3a); errar tudo = 0;
-    - pergunta "termina" ao acertar ou ao esgotar as 3 tentativas;
+    - pergunta "termina" ao acertar ou ao esgotar as 3 tentativas, e nesse
+      momento (e só nesse momento) a resposta inclui qual era a alternativa
+      correta;
     - partida termina quando todas as perguntas do programa estiverem resolvidas.
     """
     match = match_repository.get_by_id(conn, match_id)
@@ -54,6 +56,14 @@ def submit_answer(conn: Connection, match_id: int, question_id: int, option_id: 
     if match_finished:
         match_repository.finish(conn, match_id)
 
+    # Só revela a alternativa certa quando a pergunta já não pode mais
+    # ser respondida (acertou ou esgotou as 3 tentativas) — é o que a UI
+    # usa pra destacar a resposta certa depois do jogador errar tudo.
+    correct_option_id = None
+    if question_finished:
+        options = question_repository.list_options(conn, question_id)
+        correct_option_id = next(o["id"] for o in options if o["is_correct"])
+
     return {
         "attempt_number": attempt_number,
         "correct": is_correct,
@@ -61,4 +71,5 @@ def submit_answer(conn: Connection, match_id: int, question_id: int, option_id: 
         "current_score": new_score,
         "question_finished": question_finished,
         "match_finished": match_finished,
+        "correct_option_id": correct_option_id,
     }

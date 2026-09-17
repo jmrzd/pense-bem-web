@@ -91,6 +91,7 @@ def test_cenario_2_acerto_segunda_tentativa_vale_2_pontos(client, seeded_program
         "current_score": 0,
         "question_finished": False,
         "match_finished": False,
+        "correct_option_id": None,
     }
 
     right = answer(client, match["id"], question["id"], question["options"]["B"])
@@ -100,6 +101,8 @@ def test_cenario_2_acerto_segunda_tentativa_vale_2_pontos(client, seeded_program
     assert result["points_awarded"] == 2
     assert result["current_score"] == 2
     assert result["question_finished"] is True
+    # pergunta terminou (acertou): a resposta revela qual era a alternativa certa
+    assert result["correct_option_id"] == question["options"]["B"]
 
 
 def test_cenario_3_acerto_terceira_tentativa_vale_1_ponto(client, seeded_program):
@@ -129,6 +132,8 @@ def test_cenario_4_tres_erros_zera_pontos_e_libera_proxima_pergunta(client, seed
     assert third["points_awarded"] == 0
     assert third["current_score"] == 0
     assert third["question_finished"] is True  # esgotou as tentativas, libera a próxima
+    # mesmo errando tudo, a pergunta terminou: revela a alternativa certa (B)
+    assert third["correct_option_id"] == question["options"]["B"]
 
     next_question = seeded_program["questions"][QUESTION_2]
     next_result = answer(client, match["id"], next_question["id"], next_question["options"]["B"])
