@@ -10,4 +10,5 @@ router = APIRouter(prefix="/ranking", tags=["ranking"])
 
 @router.get("", response_model=list[RankingEntry])
 def get_ranking(conn: Connection = Depends(get_db)):
+    """Placar geral: melhor pontuação de cada jogador em partidas finalizadas."""
     return ranking_service.get_ranking(conn)

@@ -1,3 +1,5 @@
+"""Acesso direto às tabelas public.questions e public.question_options."""
+
 from psycopg import Connection
 
 

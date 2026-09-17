@@ -10,4 +10,5 @@ router = APIRouter(prefix="/players", tags=["players"])
 
 @router.post("", response_model=PlayerOut)
 def identify_player(payload: PlayerCreate, conn: Connection = Depends(get_db)):
+    """"Login" simples por nickname: cria o jogador na primeira vez, reaproveita depois."""
     return player_service.identify_player(conn, payload.nickname)

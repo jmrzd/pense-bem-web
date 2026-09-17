@@ -1,7 +1,13 @@
+"""Acesso direto à tabela public.players."""
+
 from psycopg import Connection
 
 
 def find_by_nickname(conn: Connection, nickname: str) -> dict | None:
+    """Busca ignorando maiúsculas/minúsculas e espaços nas pontas.
+
+    "Gelado" e "  gelado  " devem ser tratados como o mesmo jogador.
+    """
     cur = conn.execute(
         "SELECT * FROM public.players WHERE LOWER(BTRIM(nickname)) = LOWER(BTRIM(%s))",
         (nickname,),

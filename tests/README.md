@@ -31,7 +31,12 @@ A lógica principal do jogo deverá validar:
 
 # 🐍 Testes do Backend
 
-Deverão ser testados:
+**Status: implementado.** A suíte automatizada está em `tests/backend/`
+(pytest), roda contra um Postgres real via `pgserver` e cobre 100% das
+linhas de `backend/app`. Veja `backend/README.md` → seção "Testes" para
+como rodar.
+
+Cobertos:
 
 - criação e identificação de jogadores;
 - início de partidas;
@@ -217,23 +222,23 @@ Quando necessário, poderão ser adicionados screenshots ou logs.
 # ✅ Checklist antes de integração
 
 ```text
-[ ] Regra das 3 tentativas funcionando
+[x] Regra das 3 tentativas funcionando (backend)
 
-[ ] Pontuação 3/2/1/0 funcionando
+[x] Pontuação 3/2/1/0 funcionando (backend)
 
-[ ] Score limitado corretamente
+[x] Score limitado corretamente (backend, 0-90)
 
-[ ] 30 perguntas funcionando
+[x] 30 perguntas funcionando (backend)
 
-[ ] Player sendo identificado corretamente
+[x] Player sendo identificado corretamente (backend)
 
-[ ] Partidas sendo registradas
+[x] Partidas sendo registradas (backend)
 
-[ ] Banco mantendo integridade
+[ ] Banco mantendo integridade (falta revisão dedicada de constraints)
 
 [ ] Frontend comunicando com backend
 
-[ ] Ranking retornando dados corretos
+[x] Ranking retornando dados corretos (backend)
 
 [ ] Dashboard utilizando dados reais
 

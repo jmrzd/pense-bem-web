@@ -5,11 +5,13 @@ from app.repositories import match_repository, player_repository, program_reposi
 
 
 def start_match(conn: Connection, player_id: int, program_id: int) -> dict:
+    """Cria uma partida nova, validando que jogador existe e programa está ativo."""
     player = player_repository.get_by_id(conn, player_id)
     if not player:
         raise HTTPException(status_code=404, detail="Jogador não encontrado")
 
     program = program_repository.get_by_id(conn, program_id)
+    # programa desativado é tratado igual a inexistente (não deve virar partida nova)
     if not program or not program["active"]:
         raise HTTPException(status_code=404, detail="Programa não encontrado")
 

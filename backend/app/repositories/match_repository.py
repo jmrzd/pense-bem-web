@@ -1,3 +1,5 @@
+"""Acesso direto à tabela public.matches (sem regra de negócio aqui)."""
+
 from psycopg import Connection
 
 

@@ -9,6 +9,12 @@ def list_programs(conn: Connection) -> list[dict]:
 
 
 def get_program_questions(conn: Connection, program_id: int) -> list[dict]:
+    """Monta as perguntas+alternativas de um programa para o cliente do jogo.
+
+    Importante: NÃO inclui `is_correct` na resposta — o schema QuestionOut/
+    OptionOut também não tem esse campo, então mesmo que a query trouxesse
+    a coluna ela nunca vazaria pro frontend.
+    """
     program = program_repository.get_by_id(conn, program_id)
     if not program:
         raise HTTPException(status_code=404, detail="Programa não encontrado")

@@ -513,9 +513,10 @@ Os dados virão do banco através de consultas SQL.
 
 ---
 
-# 🧪 Testes importantes
+# 🧪 Testes
 
-O backend deverá ser testado principalmente nos seguintes cenários:
+A suíte automatizada já existe em `tests/backend/` (pytest) e cobre 100% das
+linhas de `app/`:
 
 ```text
 Acerto na 1ª tentativa → 3 pontos
@@ -532,18 +533,34 @@ Erro + acerto na 2ª → 2 pontos
 
 Score máximo → 90
 
-Score mínimo → 0
+criação/identificação de player
+
+início de partida (jogador ou programa inexistente → 404)
+
+registro de tentativa e finalização
+
+ranking
+
+tratamento de erros (partida/pergunta/opção inválida, pergunta de
+outro programa, responder partida já finalizada)
 ```
 
-Também deverão existir testes para:
+Os testes rodam contra um **Postgres de verdade** (não mock), subido sob
+demanda pelo pacote `pgserver` — sem precisar de Docker nem instalação
+manual. Isso importa porque várias regras (nickname único
+case-insensitive, no máximo 1 alternativa correta por pergunta, score
+entre 0 e 90) são garantidas por `CHECK`/`UNIQUE` do próprio
+`database/schema.sql`, e um mock não pegaria uma violação dessas.
 
-- criação de player;
-- início de partida;
-- registro de tentativa;
-- finalização;
-- integração com banco;
-- ranking;
-- tratamento de erros.
+## Como rodar
+
+```bash
+cd backend
+pip install -r requirements-dev.txt   # inclui pytest, httpx e pgserver
+
+cd ..
+python -m pytest tests/backend/ -v
+```
 
 ---
 
@@ -679,6 +696,7 @@ Frontend → React/TypeScript
 Regras do jogo → definidas e implementadas
 
 Rotas implementadas:
+  GET  /health
   POST /players
   GET  /programs
   GET  /programs/{id}/questions
@@ -688,6 +706,8 @@ Rotas implementadas:
   GET  /ranking
 
 Dependências → fastapi, uvicorn, psycopg, pydantic-settings
+
+Testes → pytest + pgserver (Postgres real), 100% de cobertura em app/
 ```
 
 ---

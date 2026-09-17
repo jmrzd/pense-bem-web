@@ -1,3 +1,5 @@
+"""Acesso direto à tabela public.attempts (histórico de tentativas de resposta)."""
+
 from psycopg import Connection
 
 
@@ -37,6 +39,10 @@ def create(
 
 
 def count_finished_questions(conn: Connection, match_id: int) -> int:
+    """Conta perguntas "resolvidas": acertou em alguma tentativa OU já gastou as 3.
+
+    Usado pra saber se a partida acabou (resolvidas == total de perguntas do programa).
+    """
     cur = conn.execute(
         """
         SELECT COUNT(*) AS total FROM (

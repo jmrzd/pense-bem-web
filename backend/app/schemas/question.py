@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+# Sem is_correct de propósito: essa resposta vai pro frontend, e a alternativa
+# certa não pode vazar antes do jogador responder.
+
 
 class OptionOut(BaseModel):
     id: int

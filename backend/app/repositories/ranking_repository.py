@@ -2,6 +2,10 @@ from psycopg import Connection
 
 
 def get_ranking(conn: Connection) -> list[dict]:
+    """Melhor pontuação de cada jogador, só considerando partidas finalizadas.
+
+    Desempate por quem jogou (finalizou) mais recentemente.
+    """
     cur = conn.execute(
         """
         SELECT

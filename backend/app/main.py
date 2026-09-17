@@ -10,6 +10,7 @@ from app.routes import matches, players, programs, ranking
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Abre o pool de conexões quando a API sobe e fecha quando ela desliga."""
     pool.open()
     yield
     pool.close()
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Pense Bem Web API", lifespan=lifespan)
 
+# Só o frontend configurado em FRONTEND_URL pode chamar a API pelo navegador.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url],
@@ -34,4 +36,5 @@ app.include_router(ranking.router)
 
 @app.get("/health")
 def health_check():
+    """Usado por monitoramento/deploy pra saber se a API está de pé."""
     return {"status": "ok", "env": settings.app_env}

@@ -5,6 +5,13 @@ from app.repositories import attempt_repository, match_repository, question_repo
 
 
 def submit_answer(conn: Connection, match_id: int, question_id: int, option_id: int) -> dict:
+    """Registra uma tentativa de resposta e calcula pontos, seguindo as regras do jogo:
+
+    - até 3 tentativas por pergunta;
+    - pontos por tentativa certa: 3 (1a), 2 (2a), 1 (3a); errar tudo = 0;
+    - pergunta "termina" ao acertar ou ao esgotar as 3 tentativas;
+    - partida termina quando todas as perguntas do programa estiverem resolvidas.
+    """
     match = match_repository.get_by_id(conn, match_id)
     if not match:
         raise HTTPException(status_code=404, detail="Partida não encontrada")
@@ -28,6 +35,7 @@ def submit_answer(conn: Connection, match_id: int, question_id: int, option_id: 
 
     attempt_number = len(previous_attempts) + 1
     is_correct = option["is_correct"]
+    # 1a tentativa = 3 pontos, 2a = 2, 3a = 1; errando não pontua.
     points_awarded = (4 - attempt_number) if is_correct else 0
 
     attempt_repository.create(
