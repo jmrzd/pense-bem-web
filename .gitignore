@@ -217,6 +217,9 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# Postgres embutido usado pelos testes do backend (pgserver)
+backend/.pgdata/
+
 # Node.js / frontend (Vite + React)
 node_modules/
 frontend/dist/

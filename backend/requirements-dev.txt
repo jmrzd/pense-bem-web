@@ -1,0 +1,9 @@
+# Dependências extras usadas somente para RODAR OS TESTES do backend.
+# Não são necessárias em produção — por isso ficam separadas do
+# requirements.txt principal (o README pede para não misturar as duas coisas).
+
+-r requirements.txt
+
+pytest==9.1.1
+httpx==0.28.1        # TestClient do FastAPI depende do httpx
+pgserver==0.1.4       # Postgres "embutido" (sem precisar instalar/Docker) usado só nos testes
