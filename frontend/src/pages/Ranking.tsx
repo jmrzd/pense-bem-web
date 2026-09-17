@@ -7,7 +7,7 @@ import { RankingTable } from '../dashboard/RankingTable'
 import { useRanking } from '../hooks/useRanking'
 
 export function Ranking() {
-  const ranking = useRanking()
+  const { ranking, loading } = useRanking()
   const rest = ranking.slice(3)
 
   return (
@@ -16,7 +16,9 @@ export function Ranking() {
         <PageHeading icon="trophy" title="RANKING GERAL" subtitle="O melhor score de cada jogador, feito de partidas reais." />
       </motion.div>
 
-      {ranking.length === 0 ? (
+      {loading ? (
+        <p className="text-center text-ink-soft">Carregando ranking…</p>
+      ) : ranking.length === 0 ? (
         <Panel className="mx-auto max-w-md bg-mustard text-center text-chip-dark">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl border-2 border-ink bg-paper">
             <Icon name="gamepad" size={26} />
