@@ -4,7 +4,7 @@ import type { Player } from '../types'
 
 interface PlayerContextValue {
   player: Player | null
-  setNickname: (nickname: string) => Player
+  setNickname: (nickname: string) => Promise<Player>
   clearPlayer: () => void
 }
 
@@ -13,8 +13,8 @@ const PlayerContext = createContext<PlayerContextValue | null>(null)
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const [player, setPlayer] = useState<Player | null>(() => getCurrentPlayer())
 
-  const setNickname = useCallback((nickname: string) => {
-    const identified = identifyPlayer(nickname)
+  const setNickname = useCallback(async (nickname: string) => {
+    const identified = await identifyPlayer(nickname)
     setPlayer(identified)
     return identified
   }, [])

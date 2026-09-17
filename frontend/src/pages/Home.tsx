@@ -5,16 +5,10 @@ import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { Panel } from '../components/Panel'
 import { usePlayer } from '../context/PlayerContext'
-import { programs } from '../data/programs'
+import { getPreviewQuestions } from '../data/programMeta'
 import { useDashboard } from '../hooks/useDashboard'
 
-const PREVIEW_QUESTIONS = [
-  { programIcon: programs[0].icon, text: programs[0].questions[4].prompt },
-  { programIcon: programs[1].icon, text: programs[1].questions[7].prompt },
-  { programIcon: programs[2].icon, text: programs[2].questions[2].prompt },
-  { programIcon: programs[0].icon, text: programs[0].questions[19].prompt },
-  { programIcon: programs[1].icon, text: programs[1].questions[15].prompt },
-]
+const PREVIEW_QUESTIONS = getPreviewQuestions()
 
 const PREVIEW_INTERVAL_MS = 3200
 
@@ -112,8 +106,9 @@ export function Home() {
   const stats = useDashboard()
   const [nickname, setNicknameValue] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     const trimmed = nickname.trim()
 
@@ -128,8 +123,15 @@ export function Home() {
     }
 
     setError(null)
-    setNickname(trimmed)
-    navigate('/programas')
+    setSubmitting(true)
+    try {
+      await setNickname(trimmed)
+      navigate('/programas')
+    } catch {
+      setError('Não conseguimos falar com o servidor. Tente novamente em instantes.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -243,8 +245,8 @@ export function Home() {
                 className="mt-2 w-full rounded-xl border-[2.5px] border-ink bg-cream px-4 py-3 text-lg font-bold text-ink placeholder:text-ink-soft/50 focus:outline-none focus:ring-4 focus:ring-mustard"
               />
               {error && <p className="mt-2 text-sm font-bold text-coral-dark">{error}</p>}
-              <Button type="submit" size="lg" className="mt-4 w-full">
-                <Icon name="rocket" size={18} /> Jogar agora
+              <Button type="submit" size="lg" className="mt-4 w-full" disabled={submitting}>
+                <Icon name="rocket" size={18} /> {submitting ? 'Entrando…' : 'Jogar agora'}
               </Button>
             </form>
           </div>

@@ -1,41 +1,27 @@
-import { createId } from '../lib/id'
+import { api } from '../lib/api'
 import { storage } from '../lib/storage'
 import type { Player } from '../types'
 
-const KEY = 'players'
-const CURRENT_KEY = 'current-player-id'
+const CURRENT_KEY = 'current-player'
 
-function listPlayers(): Player[] {
-  return storage.read<Player[]>(KEY, [])
+interface PlayerDto {
+  id: number
+  nickname: string
+  created_at: string
 }
 
-function saveAll(players: Player[]): void {
-  storage.write(KEY, players)
+function fromDto(dto: PlayerDto): Player {
+  return { id: String(dto.id), nickname: dto.nickname, createdAt: dto.created_at }
 }
 
 export function getCurrentPlayer(): Player | null {
-  const id = storage.read<string | null>(CURRENT_KEY, null)
-  if (!id) return null
-  return listPlayers().find((p) => p.id === id) ?? null
+  return storage.read<Player | null>(CURRENT_KEY, null)
 }
 
-export function identifyPlayer(nickname: string): Player {
-  const trimmed = nickname.trim()
-  const players = listPlayers()
-  const existing = players.find((p) => p.nickname.toLowerCase() === trimmed.toLowerCase())
-
-  const player: Player = existing ?? {
-    id: createId('player'),
-    nickname: trimmed,
-    createdAt: new Date().toISOString(),
-  }
-
-  if (!existing) {
-    players.push(player)
-    saveAll(players)
-  }
-
-  storage.write(CURRENT_KEY, player.id)
+export async function identifyPlayer(nickname: string): Promise<Player> {
+  const dto = await api.post<PlayerDto>('/players', { nickname: nickname.trim() })
+  const player = fromDto(dto)
+  storage.write(CURRENT_KEY, player)
   return player
 }
 
@@ -43,4 +29,4 @@ export function signOutPlayer(): void {
   storage.write(CURRENT_KEY, null)
 }
 
-export const playerService = { getCurrentPlayer, identifyPlayer, signOutPlayer, listPlayers }
+export const playerService = { getCurrentPlayer, identifyPlayer, signOutPlayer }
