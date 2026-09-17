@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import pool
+from app.routes import matches, players, programs, ranking
 
 
 @asynccontextmanager
@@ -23,6 +24,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+app.include_router(players.router)
+app.include_router(programs.router)
+app.include_router(matches.router)
+app.include_router(ranking.router)
 
 
 @app.get("/health")
