@@ -73,7 +73,10 @@ CREATE TABLE public.programs (
 
     id BIGINT GENERATED ALWAYS AS IDENTITY,
 
-    code VARCHAR(20) NOT NULL,
+    -- 40 (nao 20) porque o codigo tambem serve de slug de URL no
+    -- frontend (ex.: "conhecimentos-gerais"), mais longo que um
+    -- codigo interno curto.
+    code VARCHAR(40) NOT NULL,
 
     title VARCHAR(100) NOT NULL,
 
