@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import pool
-from app.routes import matches, players, programs, ranking
+from app.routes import dashboard, matches, players, programs, ranking
 
 
 @asynccontextmanager
@@ -32,6 +32,7 @@ app.include_router(players.router)
 app.include_router(programs.router)
 app.include_router(matches.router)
 app.include_router(ranking.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/health")
