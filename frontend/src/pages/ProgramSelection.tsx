@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { ErrorMessage } from '../components/ErrorMessage'
 import { Icon, type IconName } from '../components/Icon'
 import { Panel } from '../components/Panel'
 import { usePlayer } from '../context/PlayerContext'
-import { listPrograms } from '../services/programService'
+import { usePrograms } from '../hooks/usePrograms'
 import { getSession } from '../services/quizSessionService'
 import type { Program } from '../types'
 
@@ -22,7 +23,7 @@ const PROGRAM_ICONS: Record<string, IconName> = {
 export function ProgramSelection() {
   const { player } = usePlayer()
   const navigate = useNavigate()
-  const programs = listPrograms()
+  const { programs, loading, error } = usePrograms()
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -34,6 +35,13 @@ export function ProgramSelection() {
         <p className="mt-3 text-ink-soft">Cada programa tem 30 perguntas e até 90 pontos disponíveis.</p>
       </motion.div>
 
+      {error && (
+        <ErrorMessage title="Não foi possível carregar os programas" message={error} onRetry={() => window.location.reload()} />
+      )}
+
+      {!error && loading && <p className="text-center text-ink-soft">Carregando programas…</p>}
+
+      {!error && !loading && (
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {programs.map((program, index) => {
           const session = player ? getSession(program.id, player.id) : null
@@ -80,6 +88,7 @@ export function ProgramSelection() {
           )
         })}
       </div>
+      )}
     </div>
   )
 }
