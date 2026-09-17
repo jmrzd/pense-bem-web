@@ -190,19 +190,10 @@ A implementação dependerá do framework escolhido para a API.
 
 # 🐍 Framework Python
 
-O backend utilizará Python.
+O backend utiliza Python com **FastAPI**.
 
-O framework da API ainda não foi definido.
-
-Possibilidades incluem:
-
-```text
-FastAPI
-Flask
-ou outra solução compatível
-```
-
-A decisão final será tomada pelo responsável pelo backend de acordo com as necessidades do projeto.
+A conexão com o banco é feita com `psycopg` (SQL direto sobre `database/schema.sql`,
+sem ORM).
 
 Responsável principal:
 
@@ -578,21 +569,21 @@ dotenv
 
 # ▶️ Execução local
 
-Os comandos definitivos serão definidos após a escolha do framework.
+```bash
+cd backend
+python -m venv .venv
+.venv/Scripts/activate      # Windows
+# source .venv/bin/activate # Linux/Mac
 
-O fluxo esperado será:
+pip install -r requirements.txt
 
-```text
-entrar na pasta backend
-      ↓
-criar ambiente virtual
-      ↓
-instalar requirements
-      ↓
-configurar .env
-      ↓
-iniciar API
+cp .env.example .env        # preencher DATABASE_URL etc.
+
+uvicorn app.main:app --reload
 ```
+
+A API sobe em `http://localhost:8000`, com documentação interativa em
+`http://localhost:8000/docs`.
 
 ---
 
@@ -679,17 +670,24 @@ Neste momento:
 ```text
 Python → confirmado
 
-Framework → ainda será definido
+Framework → FastAPI
 
-Banco → Supabase/PostgreSQL
+Banco → Supabase/PostgreSQL (psycopg, sem ORM)
 
 Frontend → React/TypeScript
 
-Regras do jogo → definidas
+Regras do jogo → definidas e implementadas
 
-Rotas → serão definidas na implementação
+Rotas implementadas:
+  POST /players
+  GET  /programs
+  GET  /programs/{id}/questions
+  POST /matches
+  GET  /matches/{id}
+  POST /matches/{id}/answers
+  GET  /ranking
 
-Dependências → serão adicionadas posteriormente
+Dependências → fastapi, uvicorn, psycopg, pydantic-settings
 ```
 
 ---
