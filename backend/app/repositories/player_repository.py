@@ -15,3 +15,10 @@ def create(conn: Connection, nickname: str) -> dict:
         (nickname,),
     )
     return cur.fetchone()
+
+
+def get_by_id(conn: Connection, player_id: int) -> dict | None:
+    cur = conn.execute(
+        "SELECT * FROM public.players WHERE id = %s", (player_id,)
+    )
+    return cur.fetchone()
