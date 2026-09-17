@@ -9,16 +9,16 @@ import { OptionButton, type OptionStatus } from '../components/OptionButton'
 import { Panel } from '../components/Panel'
 import { ProgressBar } from '../components/ProgressBar'
 import { usePlayer } from '../context/PlayerContext'
+import { useProgram } from '../hooks/useProgram'
 import { useQuiz } from '../hooks/useQuiz'
 import { fireCelebration, fireSmallBurst } from '../lib/confetti'
-import { getProgram } from '../services/programService'
-import type { Match } from '../types'
+import type { Match, Program } from '../types'
 
 export function Quiz() {
   const { programId } = useParams<{ programId: string }>()
   const { player } = usePlayer()
   const navigate = useNavigate()
-  const program = programId ? getProgram(programId) : undefined
+  const { program, loading, error } = useProgram(programId)
 
   const handleFinish = useCallback(
     (match: Match) => {
@@ -28,42 +28,79 @@ export function Quiz() {
     [navigate],
   )
 
-  if (!program || !player) {
+  if (!player) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-20">
+        <ErrorMessage
+          title="Você ainda não entrou"
+          message="Digite seu apelido na tela inicial antes de jogar."
+          onRetry={() => navigate('/')}
+        />
+      </div>
+    )
+  }
+
+  if (loading) {
+    return <p className="mx-auto max-w-md px-4 py-20 text-center text-ink-soft">Carregando perguntas…</p>
+  }
+
+  if (error || !program) {
     return (
       <div className="mx-auto max-w-md px-4 py-20">
         <ErrorMessage
           title="Programa não encontrado"
-          message="Esse programa não existe ou o link está incorreto. Volte e escolha um programa válido."
+          message={error ?? 'Esse programa não existe ou o link está incorreto. Volte e escolha um programa válido.'}
           onRetry={() => navigate('/programas')}
         />
       </div>
     )
   }
 
-  return <QuizRunner programId={program.id} playerId={player.id} playerNickname={player.nickname} onFinish={handleFinish} />
+  return (
+    <QuizRunner
+      program={program}
+      apiPlayerId={Number(player.id)}
+      playerId={player.id}
+      playerNickname={player.nickname}
+      onFinish={handleFinish}
+    />
+  )
 }
 
 function QuizRunner({
-  programId,
+  program,
+  apiPlayerId,
   playerId,
   playerNickname,
   onFinish,
 }: {
-  programId: string
+  program: Program
+  apiPlayerId: number
   playerId: string
   playerNickname: string
   onFinish: (match: Match) => void
 }) {
-  const program = getProgram(programId)!
-  const quiz = useQuiz({ program, playerId, playerNickname, onFinish })
+  const quiz = useQuiz({ program, apiPlayerId, playerId, playerNickname, onFinish })
   const [showResumeBanner, setShowResumeBanner] = useState(quiz.wasResumed)
 
   useEffect(() => {
     if (quiz.feedback === 'correct') fireSmallBurst()
   }, [quiz.feedback])
 
+  if (quiz.matchStartError) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-20">
+        <ErrorMessage title="Não foi possível iniciar a partida" message={quiz.matchStartError} onRetry={() => window.location.reload()} />
+      </div>
+    )
+  }
+
+  if (quiz.matchStarting) {
+    return <p className="mx-auto max-w-md px-4 py-20 text-center text-ink-soft">Preparando sua partida…</p>
+  }
+
   function optionStatus(optionId: string): OptionStatus {
-    const isCorrectOption = optionId === quiz.currentQuestion.correctOptionId
+    const isCorrectOption = optionId === quiz.revealedCorrectOptionId
 
     if (quiz.feedback === 'revealed') {
       return isCorrectOption ? 'reveal-correct' : quiz.triedOptionIds.includes(optionId) ? 'incorrect' : 'disabled'
@@ -152,6 +189,10 @@ function QuizRunner({
 
             <FeedbackBanner feedback={quiz.feedback} attemptsRemaining={quiz.attemptsRemaining} />
 
+            {quiz.submitError && (
+              <p className="mt-4 text-center text-sm font-bold text-coral-dark">{quiz.submitError}</p>
+            )}
+
             <div className="mt-6 flex justify-end">
               {isLocked ? (
                 <Button size="lg" variant="teal" onClick={quiz.goToNextQuestion}>
@@ -166,8 +207,8 @@ function QuizRunner({
                   )}
                 </Button>
               ) : (
-                <Button size="lg" onClick={quiz.confirmAnswer} disabled={!quiz.selectedOptionId}>
-                  Confirmar resposta
+                <Button size="lg" onClick={quiz.confirmAnswer} disabled={!quiz.selectedOptionId || quiz.submitting}>
+                  {quiz.submitting ? 'Enviando…' : 'Confirmar resposta'}
                 </Button>
               )}
             </div>
