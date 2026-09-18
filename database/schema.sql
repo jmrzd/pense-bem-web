@@ -4,7 +4,7 @@
 -- PostgreSQL / Supabase
 --
 -- Responsável principal:
--- João Miguel (Gelado) — Banco de Dados / SQL / Supabase
+-- João Miguel Silva de Rezende (Gelado) — Banco de Dados / SQL / Supabase
 --
 -- Estrutura principal:
 -- players
@@ -114,7 +114,8 @@ CREATE TABLE public.programs (
 --
 -- pertence a um programa;
 -- possui número entre 1 e 30;
--- possui seu próprio enunciado.
+-- possui seu próprio enunciado;
+-- pode possuir uma imagem opcional para questões visuais.
 --
 -- Um programa não pode possuir duas perguntas
 -- com o mesmo número.
@@ -129,6 +130,10 @@ CREATE TABLE public.questions (
     question_number SMALLINT NOT NULL,
 
     prompt TEXT NOT NULL,
+
+    -- URL/caminho opcional para questões que dependem de imagem.
+    -- Questões somente textuais permanecem com NULL.
+    image_url TEXT,
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 

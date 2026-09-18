@@ -1,5 +1,6 @@
 import { api } from '../lib/api'
 import { getProgramMeta } from '../data/programMeta'
+
 import type { Option, Program, Question } from '../types'
 
 interface ProgramDto {
@@ -20,11 +21,16 @@ interface QuestionDto {
   id: number
   question_number: number
   prompt: string
+
+  // Vem do backend/Supabase
+  image_url: string | null
+
   options: OptionDto[]
 }
 
 function fromProgramDto(dto: ProgramDto): Program {
   const meta = getProgramMeta(dto.code)
+
   return {
     id: dto.code,
     apiProgramId: dto.id,
@@ -38,7 +44,11 @@ function fromProgramDto(dto: ProgramDto): Program {
 }
 
 function fromOptionDto(dto: OptionDto): Option {
-  return { id: dto.option_code, apiOptionId: dto.id, text: dto.option_text }
+  return {
+    id: dto.option_code,
+    apiOptionId: dto.id,
+    text: dto.option_text,
+  }
 }
 
 function fromQuestionDto(dto: QuestionDto): Question {
@@ -46,28 +56,52 @@ function fromQuestionDto(dto: QuestionDto): Question {
     id: dto.id,
     questionNumber: dto.question_number,
     prompt: dto.prompt,
+
+    // Converte snake_case do Python
+    // para camelCase do React/TypeScript
+    imageUrl: dto.image_url,
+
     options: dto.options.map(fromOptionDto),
   }
 }
 
 export async function fetchPrograms(): Promise<Program[]> {
   const dtos = await api.get<ProgramDto[]>('/programs')
+
   return dtos.map(fromProgramDto)
 }
 
-export async function fetchProgram(code: string): Promise<Program | undefined> {
+export async function fetchProgram(
+  code: string,
+): Promise<Program | undefined> {
   const programs = await fetchPrograms()
+
   return programs.find((p) => p.id === code)
 }
 
-export async function fetchProgramQuestions(apiProgramId: number): Promise<Question[]> {
-  const dtos = await api.get<QuestionDto[]>(`/programs/${apiProgramId}/questions`)
+export async function fetchProgramQuestions(
+  apiProgramId: number,
+): Promise<Question[]> {
+  const dtos = await api.get<QuestionDto[]>(
+    `/programs/${apiProgramId}/questions`,
+  )
+
   return dtos.map(fromQuestionDto)
 }
 
-export async function fetchProgramWithQuestions(code: string): Promise<Program | undefined> {
+export async function fetchProgramWithQuestions(
+  code: string,
+): Promise<Program | undefined> {
   const program = await fetchProgram(code)
+
   if (!program) return undefined
-  const questions = await fetchProgramQuestions(program.apiProgramId)
-  return { ...program, questions }
+
+  const questions = await fetchProgramQuestions(
+    program.apiProgramId,
+  )
+
+  return {
+    ...program,
+    questions,
+  }
 }

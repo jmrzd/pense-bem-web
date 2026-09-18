@@ -1,10 +1,9 @@
 /**
  * Metadados de apresentação dos programas (visual/copy), por `code`.
  *
- * As perguntas de verdade (com a resposta certa) ficam só no backend —
- * ver backend/scripts/seed_programs.py. Isso aqui é só o "verniz": ícone,
- * cor de destaque, texto de efeito e algumas perguntas de exemplo pro
- * teaser da home (puramente decorativo, sem gabarito nenhum).
+ * As perguntas de verdade (com a resposta certa) ficam só no backend.
+ * Isso aqui é só o "verniz": ícone, cor de destaque, texto de efeito
+ * e algumas perguntas de exemplo pro teaser da home.
  */
 
 export interface ProgramMeta {
@@ -17,36 +16,62 @@ export interface ProgramMeta {
 
 export const PROGRAM_META: ProgramMeta[] = [
   {
-    code: 'conhecimentos-gerais',
-    tagline: 'Cultura, geografia e história num só programa',
-    icon: '🌍',
+    code: '131',
+    tagline: 'Sonic, Tails e muita velocidade',
+    icon: '⚡',
     accent: 'mustard',
     previewQuestions: [
-      'Qual é o menor país do mundo?',
-      'Qual é a capital da França?',
-      'Quem escreveu "Dom Casmurro"?',
+      'Sonic é um... superveloz.',
+      'Qual é o animal terrestre mais veloz?',
+      'O que significa ser supersônico?',
     ],
   },
+
   {
-    code: 'ciencia-natureza',
-    tagline: 'Do átomo às estrelas',
-    icon: '🧬',
-    accent: 'teal',
-    previewQuestions: [
-      'Qual é o maior planeta do sistema solar?',
-      'Quantos corações tem um polvo?',
-      'Qual é o processo pelo qual as plantas produzem energia?',
-    ],
-  },
-  {
-    code: 'games-cultura-pop',
-    tagline: 'Para quem vive conectado',
-    icon: '🎮',
+    code: '132',
+    tagline: 'Aventuras, desafios e raciocínio',
+    icon: '🌀',
     accent: 'coral',
     previewQuestions: [
-      'Qual é o nome do reino onde se passa "The Legend of Zelda"?',
-      'Qual empresa é a criadora do PlayStation?',
-      'Qual é o nome do vilão principal em "Super Mario Bros"?',
+      'Quem corre mais rápido?',
+      'Qual é a ordem correta da história?',
+      'Sonic gosta de correr?',
+    ],
+  },
+
+  {
+    code: '133',
+    tagline: 'Movimento, transportes e invenções',
+    icon: '🚀',
+    accent: 'teal',
+    previewQuestions: [
+      'Qual veículo é mais veloz?',
+      'O que faz um moinho se movimentar?',
+      'Quem inventou o avião?',
+    ],
+  },
+
+  {
+    code: '134',
+    tagline: 'Vento, som, luz e natureza',
+    icon: '💨',
+    accent: 'mustard',
+    previewQuestions: [
+      'O que é o vento?',
+      'O que é mais rápido: luz ou som?',
+      'O que é um furacão?',
+    ],
+  },
+
+  {
+    code: '135',
+    tagline: 'Movimento e corpo em ação',
+    icon: '🏁',
+    accent: 'coral',
+    previewQuestions: [
+      'Qual é o meio mais rápido de se movimentar?',
+      'Que animal voa mais rápido?',
+      'Qual palavra indica movimento?',
     ],
   },
 ]
@@ -58,11 +83,22 @@ const DEFAULT_META: Omit<ProgramMeta, 'code'> = {
   previewQuestions: [],
 }
 
-export function getProgramMeta(code: string): Omit<ProgramMeta, 'code'> {
+export function getProgramMeta(
+  code: string,
+): Omit<ProgramMeta, 'code'> {
   const meta = PROGRAM_META.find((m) => m.code === code)
+
   return meta ?? DEFAULT_META
 }
 
-export function getPreviewQuestions(): { programIcon: string; text: string }[] {
-  return PROGRAM_META.flatMap((meta) => meta.previewQuestions.map((text) => ({ programIcon: meta.icon, text })))
+export function getPreviewQuestions(): {
+  programIcon: string
+  text: string
+}[] {
+  return PROGRAM_META.flatMap((meta) =>
+    meta.previewQuestions.map((text) => ({
+      programIcon: meta.icon,
+      text,
+    })),
+  )
 }
